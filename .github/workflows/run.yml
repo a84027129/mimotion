@@ -36,6 +36,13 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@users.noreply.github.com
-          git add .
-          git commit -m "persist tokens trigger by ${{ github.event_name }}"
-          git push origin master
+          
+          # 检查是否有更改
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "persist tokens trigger by ${{ github.event_name }}"
+            git push origin master
+            echo "✅ 提交成功"
+          else
+            echo "没有文件需要提交，跳过推送"
+          fi
